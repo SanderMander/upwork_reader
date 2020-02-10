@@ -1,0 +1,9 @@
+config:
+  slack_web_hook_url: https://hooks.slack.com/services/QQQQQQQQQ/WWWWWWWWW/EEEEEEEEEEEEEEEEEEEEEEEE
+  sleep_time: 300
+feeds:
+  - name: ruby on rails < 20
+    url: https://www.upwork.com/ab/feed/topics/rss?securityToken=4c4c4c4c4c4c4c4cc4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4cc4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c44x4x4x4&userUid=111111111111111111&orgUid=444444444444444444&topic=1231234
+    notify: true
+  - name: startups
+    url: https://www.upwork.com/ab/feed/topics/rss?securityToken=4c4c4c4c4c4c4c4cc4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4cc4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c44x4x4x4&userUid=111111111111111111&orgUid=444444444444444444&topic=1231234

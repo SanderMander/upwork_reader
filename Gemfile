@@ -1,0 +1,6 @@
+source 'https://rubygems.org'
+gem 'nokogiri'
+gem 'time_difference'
+gem 'http'
+gem 'logstash-logger'
+gem 'pry-byebug'
