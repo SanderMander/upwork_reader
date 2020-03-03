@@ -2,6 +2,19 @@ version: "3.6"
 
 services:
 
+  traefik:
+    image: traefik:2.1.4
+    command: --api.insecure=true --providers.docker
+    ports:
+      # The HTTP port
+      - "80:80"
+      # - "8080:8080"
+    networks:
+      - internal
+      - web
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
   elasticsearch:
     image: elasticsearch:7.5.1
     environment:
@@ -9,25 +22,39 @@ services:
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     volumes:
       - elastic:/usr/share/elasticsearch/data
+    networks:
+      - internal
+    labels:
+      - traefik.enable=false
 
   logstash:
     image: logstash:7.5.1
     command: bin/logstash -f /etc/logstash/conf.d/logstash.conf
     depends_on:
       - elasticsearch
-    links:
-      - "elasticsearch:elastic.container"
     expose:
       - "12201/udp"
+    networks:
+      - internal
+    labels:
+      - traefik.enable=false
 
   kibana:
     image: kibana:7.5.1
+    labels:
+      - traefik.docker.network=web
+      - traefik.port=5601
+      - traefik.http.middlewares.basic-auth.basicauth.users=user:$$apr1$$RjIp.cCp$$y6kRCNuVbV6QZqfQiZXcQ0
+      - traefik.http.routers.kibana.rule=PathPrefix(`/dash`)
+      - traefik.http.routers.kibana.middlewares=basic-auth@docker
+    environment:
+      SERVER_BASEPATH: /dash
+      SERVER_REWRITEBASEPATH: 'true'
+    networks:
+      - internal
+      - web
     depends_on:
       - elasticsearch
-    links:
-      - "elasticsearch:elastic.container"
-    ports:
-      - "5601:5601"
 
   parser:
     build:
@@ -36,6 +63,11 @@ services:
     depends_on:
       - logstash
 
+networks:
+  web:
+    external: true
+  internal:
+    external: false
 
 volumes:
   elastic: {}
