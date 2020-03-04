@@ -64,6 +64,10 @@ services:
       dockerfile: ./Dockerfile
     depends_on:
       - logstash
+    networks:
+      - internal
+    labels:
+      - traefik.enable=false
 
 networks:
   web:
