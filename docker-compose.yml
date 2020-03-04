@@ -30,6 +30,8 @@ services:
   logstash:
     image: logstash:7.5.1
     command: bin/logstash -f /etc/logstash/conf.d/logstash.conf
+    volumes:
+      - ./logstash.conf:/etc/logstash/conf.d/logstash.conf
     depends_on:
       - elasticsearch
     expose:
