@@ -7,4 +7,4 @@ Upwork RSS feed parser and analyzer based on ELK stack
 1. `mv config-example.yml config.yml`
 2. Fill in it with correct values
 3. `docker-compose up -d`
-4. Access kibana with http://localhost:5601
+4. Access kibana with http://localhost
