@@ -88,15 +88,7 @@ class Parser
       *Skills:* #{job[:skills].join(', ')}
       *Open link:* #{job[:link]}
 MSG
-      payload = {
-        body: {
-          text: message,
-          channel: Config.slack_channel
-        }.to_json
-      }
-      Thread.new do
-        HTTP.post(Config.slack_web_hook_url, payload)
-      end
+      Notifier.call(message, Config.slack_channel)
     end
 
     def week_day(published_at)

@@ -6,9 +6,15 @@ require 'time_difference'
 require 'logstash-logger'
 require 'pry-byebug'
 require_relative 'lib/config.rb'
+require_relative 'lib/notifier.rb'
 require_relative 'lib/parser.rb'
 parser = Parser.new(Config.feeds)
-
+Thread.new do
+  while true do
+    Notifier.call('I am up' ,'parser-health')
+    sleep 86400
+  end
+end
 while true do
   begin
     parser.parse_feeds
