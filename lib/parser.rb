@@ -1,6 +1,6 @@
 
 class Parser
-  LOGGER = LogStashLogger.new(type: :udp, host: 'logstash', port: 12201)
+  LOGGER = VectorClient.new(type: :udp, host: 'vector', port: 9000)
 
   attr_accessor :feeds
 
@@ -22,7 +22,7 @@ class Parser
 
         if job_item[:published_at] > last_checked_at
           puts "Feed #{feed_name} new job found: #{job_item[:title]}"
-          LOGGER.info(job_item.to_json)
+          LOGGER.info(job_item)
           notify(job_item) if feed_notify
           update_marker(feed_name)
         end
