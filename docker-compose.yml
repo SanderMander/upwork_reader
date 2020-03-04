@@ -27,15 +27,28 @@ services:
     labels:
       - traefik.enable=false
 
-  logstash:
-    image: logstash:7.5.1
-    command: bin/logstash -f /etc/logstash/conf.d/logstash.conf
+  # logstash:
+  #   image: logstash:7.5.1
+  #   command: bin/logstash -f /etc/logstash/conf.d/logstash.conf
+  #   volumes:
+  #     - ./logstash.conf:/etc/logstash/conf.d/logstash.conf
+  #   depends_on:
+  #     - elasticsearch
+  #   expose:
+  #     - "12201/udp"
+  #   networks:
+  #     - internal
+  #   labels:
+  #     - traefik.enable=false
+  vector:
+    image: timberio/vector:latest-alpine
+    command: --config /etc/vector/vector.toml
     volumes:
-      - ./logstash.conf:/etc/logstash/conf.d/logstash.conf
+      - ./vector.toml:/etc/vector/vector.toml
     depends_on:
       - elasticsearch
     expose:
-      - "12201/udp"
+      - "9000/udp"
     networks:
       - internal
     labels:
@@ -63,7 +76,7 @@ services:
       context: .
       dockerfile: ./Dockerfile
     depends_on:
-      - logstash
+      - vector
     networks:
       - internal
     labels:

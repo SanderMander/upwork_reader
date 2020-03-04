@@ -1,0 +1,16 @@
+# Consume data
+[sources.parser]
+  type = "socket"
+  address = "0.0.0.0:9000"
+  mode = "udp"
+
+[transforms.json]
+  inputs = ["parser"]
+  type   = "json_parser"
+  field  = "message"
+
+[sinks.elastic]
+  inputs = ["json"]
+  type = "elasticsearch"
+  index = "vector-index"
+  host = "http://elasticsearch:9200"
