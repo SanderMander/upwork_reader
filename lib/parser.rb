@@ -36,6 +36,7 @@ class Parser
     def build_json(feed_name, item)
       desc = item.at_xpath('description').content
       published_at = (Time.parse(item.at_xpath('pubDate').content).utc rescue 0)
+      hourly_range = parse_content(desc, 'Hourly range')
       {
         feed_name: feed_name,
         title: item.at_xpath('title').content,
@@ -43,6 +44,9 @@ class Parser
         description: item.at_xpath('description').content,
         published_at: published_at,
         day_period: day_period(published_at),
+        hourly_range: hourly_range,
+        hourly_min: parse_hourly(hourly_range, :min),
+        hourly_max: parse_hourly(hourly_range, :max),
         country: parse_content(desc, 'country'),
         skills: parse_content(desc, 'skills').split(', '),
         week_day: week_day(published_at),
@@ -75,6 +79,16 @@ class Parser
       false
     end
 
+    def parse_hourly(range, type)
+      return '' if range.length.zero?
+      range_parts = range.scan(/\d+\.\d+/).map(&:to_f)
+      if type == :min || range_parts.size == 1
+        range_parts[0]
+      else
+        range_parts[1]
+      end
+    end
+
     def parse_content(content, type)
       matches = content.match(/#{type}.*: ?(.*)(?:\n|<b)/i)
       return '' unless matches
@@ -86,6 +100,7 @@ class Parser
       *Job:* #{job[:title]} has been added #{job[:age]} ago
       *From:* #{job[:country]}
       *Skills:* #{job[:skills].join(', ')}
+      *Hourly range:* #{job[:hourly_range]}
       *Open link:* #{job[:link]}
 MSG
       Notifier.call(message, Config.slack_channel)
