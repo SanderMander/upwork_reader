@@ -45,9 +45,9 @@ class Parser
         published_at: published_at,
         day_period: day_period(published_at),
         hourly_range: hourly_range,
-        hourly_min: get_hourly_range(hourly_range, :min),
-        hourly_max: get_hourly_range(hourly_range, :max),
-        hourly_avg: get_hourly_average_range(hourly_range),
+        hourly_min_f: get_hourly_range(hourly_range, :min),
+        hourly_max_f: get_hourly_range(hourly_range, :max),
+        hourly_avg_f: get_hourly_average_range(hourly_range),
         country: parse_content(desc, 'country'),
         skills: parse_content(desc, 'skills').split(', '),
         week_day: week_day(published_at),
@@ -96,7 +96,7 @@ class Parser
       if range_parts.size == 1 || range_parts[1] == range_parts[0]
         range_parts[0]
       else
-        (range_parts[1] - range_parts[0]) / 2
+        (range_parts[1] + range_parts[0]) / 2
       end
     end
 
